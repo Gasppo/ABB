@@ -194,7 +194,18 @@ void abb_destruir(abb_t *arbol){
 }
 
 //Iterador interno-----------------------------------------------------------------------
-void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra);
+void abb_in_order_recursivo(abb_nodo_t* nodo, bool visitar(const char *, void *, void *), void *extra) {
+    if(!nodo) return;
+    abb_in_order_recursivo(nodo->izq, visitar, extra);
+    if(!visitar(nodo->clave, nodo->valor, extra)) return;
+    abb_in_order_recursivo(nodo->der, visitar, extra);
+}
+
+
+
+void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
+	abb_in_order_recursivo(arbol->raiz, visitar, extra);
+}
 
 //Iterador externo-----------------------------------------------------------------------
 
