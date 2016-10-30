@@ -180,7 +180,7 @@ void *abb_obtener(const abb_t *arbol, const char *clave){
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
-    return (abb_guardar_auxiliar(arbol, arbol->raiz, clave, NULL));
+    return (abb_pertenece_auxiliar(arbol, clave, NULL));
 }
 
 size_t abb_cantidad(abb_t *arbol){
