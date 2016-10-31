@@ -249,9 +249,8 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
 typedef struct abb_iter abb_iter_t;
 
 struct abb_iter {
-	abb_destruir_dato_t destruir_dato;
 	pila_t* pila;
-	abb_destruir_dato_t destruir_dato;
+
 };
 
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol) {
@@ -281,7 +280,6 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol) {
 				
 			}
 		}
-    iter->destruir_dato	= arbol->destruir_dato;
     iter->pila = pila;
 
     return iter;
@@ -317,14 +315,8 @@ bool abb_iter_in_al_final(const abb_iter_t *iter){
 	return pila_esta_vacia(iter->pila);
 }
 
-void abb_iter_in_destruir(abb_iter_t* iter){
+void abb_iter_in_destruir(abb_iter_t* iter) {
     if(!iter) return;
-    if(iter->pila)
-	while(!pila_esta_vacia(iter->pila)){
-		abb_nodo_t *nodo_nuevo = pila_desapilar(iter->pila);
-		if(iter->destruir_dato) destruir_dato(nodo_nuevo->valor);
-		free(nodo_nuevo);
-	}
-	pila_destruir(iter->pila, NULL);
+        pila_destruir(iter->pila, NULL);
     free(iter);
 }
