@@ -106,10 +106,10 @@ void *abb_obtener_auxiliar(const abb_t *arbol, const char *clave, abb_nodo_t *no
     else return abb_obtener_auxiliar(arbol, clave, nodo->der);
 }
 
-void destruir_nodo(abb_t *arbol, abb_nodo_t *nodo){
+void destruir_nodo(abb_destruir_dato_t destruir_dato, abb_nodo_t *nodo){
     if(nodo){
         free(nodo->clave);
-        if(arbol->destruir_dato) arbol->destruir_dato(nodo->valor);
+        if(destruir_dato!=NULL) destruir_dato(nodo->valor);
         free(nodo);
     }
 }
@@ -118,7 +118,7 @@ void destruir_nodos(abb_t *arbol, abb_nodo_t *nodo){
     if(!nodo) return;
     destruir_nodos(arbol, nodo->izq);
     destruir_nodos(arbol, nodo->der);
-    destruir_nodo(arbol, nodo);
+    destruir_nodo(arbol->destruir_dato, nodo);
 }
 
 void *abb_borrar_auxiliar(abb_t *arbol, abb_nodo_t *nodo, const char *clave){
@@ -251,6 +251,7 @@ typedef struct abb_iter abb_iter_t;
 struct abb_iter {
 	abb_destruir_dato_t destruir_dato;
 	pila_t* pila;
+	abb_destruir_dato_t destruir_dato;
 };
 
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol) {
@@ -319,6 +320,11 @@ bool abb_iter_in_al_final(const abb_iter_t *iter){
 void abb_iter_in_destruir(abb_iter_t* iter){
     if(!iter) return;
     if(iter->pila)
-        pila_destruir(iter->pila, NULL);
+	while(!pila_esta_vacia(iter->pila)){
+		abb_nodo_t *nodo_nuevo = pila_desapilar(iter->pila);
+		if(iter->destruir_dato) destruir_dato(nodo_nuevo->valor);
+		free(nodo_nuevo);
+	}
+	pila_destruir(iter->pila, NULL);
     free(iter);
 }
