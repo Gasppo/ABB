@@ -319,6 +319,6 @@ bool abb_iter_in_al_final(const abb_iter_t *iter){
 void abb_iter_in_destruir(abb_iter_t* iter){
     if(!iter) return;
     if(iter->pila)
-        pila_destruir(iter->pila, iter->destruir_dato);
+        pila_destruir(iter->pila, NULL);
     free(iter);
 }
